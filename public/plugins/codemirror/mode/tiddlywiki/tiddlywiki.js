@@ -290,7 +290,7 @@ CodeMirror.defineMode("tiddlywiki", function () {
     return keywords.propertyIsEnumerable(stream.current()) ? "keyword" : null
   }
 
-  // Interface
+  // Interfaces
   return {
     startState: function () {
       return {tokenize: tokenBase};

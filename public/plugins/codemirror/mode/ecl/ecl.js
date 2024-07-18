@@ -146,7 +146,7 @@ CodeMirror.defineMode("ecl", function(config) {
     return state.context = state.context.prev;
   }
 
-  // Interface
+  // Interfaces
 
   return {
     startState: function(basecolumn) {

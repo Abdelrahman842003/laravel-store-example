@@ -14,7 +14,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        return view('dashboard.profile.edit', [
+        return view('Dashboard.profile.edit', [
             'user' => $user,
             'countries' => Countries::getNames(),
             'locales' => Languages::getNames(),
@@ -35,7 +35,7 @@ class ProfileController extends Controller
 
         $user->profile->fill( $request->all() )->save();
 
-        return redirect()->route('dashboard.profile.edit')
+        return redirect()->route('Dashboard.profile.edit')
             ->with('success', 'Profile updated!');
 
 
@@ -51,6 +51,6 @@ class ProfileController extends Controller
         //     $user->profile()->create($request->all());
         // }
 
-        
+
     }
 }

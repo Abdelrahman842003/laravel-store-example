@@ -107,7 +107,7 @@
       return state.context = state.context.prev;
     }
 
-    //Interface
+    //Interfaces
     return {
       startState: function(basecolumn) {
         return {

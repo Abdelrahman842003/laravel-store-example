@@ -3,17 +3,20 @@
     namespace App\Http\Controllers\Dashboard;
 
     use App\Http\Controllers\Controller;
-    use App\Models\Category;
+    use App\Http\Interfaces\Dashboard\ProductsInterface;
+    use App\Http\Requests\ProductRequest;
     use App\Models\Product;
-    use App\Models\Tag;
     use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Auth;
-    use Illuminate\Support\Facades\Redirect;
-    use Illuminate\Support\Facades\Storage;
-    use Illuminate\Support\Str;
+
 
     class ProductsController extends Controller
     {
+        public $ProductsInterface;
+
+        public function __construct(ProductsInterface $ProductsInterface)
+        {
+            $this->ProductsInterface = $ProductsInterface;
+        }
         /**
          * Display a listing of the resource.
          *
@@ -21,13 +24,7 @@
          */
         public function index(Request $request)
         {
-            $data_search = $request->query();
-            $products = Product::with(['category', 'store'])->filter($data_search)->paginate();
-            // SELECT * FROM products
-            // SELECT * FROM categories WHERE id IN (..)
-            // SELECT * FROM stores WHERE id IN (..)
-
-            return view('dashboard.products.index', compact('products'));
+            return $this->ProductsInterface->index($request);
         }
 
         /**
@@ -37,12 +34,7 @@
          */
         public function create()
         {
-            //
-            $product = new Product;
-            $tags = new Tag;
-
-            return view('dashboard.products.create', compact('product', 'tags'));
-
+            return $this->ProductsInterface->create();
         }
 
         /**
@@ -51,20 +43,9 @@
          * @param \Illuminate\Http\Request $request
          * @return \Illuminate\Http\Response
          */
-        public function store(Request $request)
+        public function store(ProductRequest $request)
         {
-            //
-            // Request merge
-            $request->merge([
-                'slug' => Str::slug($request->post('name'))
-            ]);
-
-            $data = $request->except('image');
-            $data['image'] = $this->uploadImgae($request);
-            Product::create($data);
-            return redirect()->route('dashboard.products.index')
-                ->with('success', 'Product created!');
-
+            return $this->ProductsInterface->store($request);
         }
 
         /**
@@ -73,10 +54,7 @@
          * @param int $id
          * @return \Illuminate\Http\Response
          */
-        public function show($id)
-        {
-            //
-        }
+
 
         /**
          * Show the form for editing the specified resource.
@@ -86,12 +64,8 @@
          */
         public function edit($id)
         {
-            $product = Product::findOrFail($id);
-
-            $tags = implode(',', $product->tags()->pluck('name')->toArray());
-
-            return view('dashboard.products.edit', compact('product', 'tags'));
-        }
+            return $this->ProductsInterface->edit($id);
+            }
 
         /**
          * Update the specified resource in storage.
@@ -100,32 +74,9 @@
          * @param int $id
          * @return \Illuminate\Http\Response
          */
-        public function update(Request $request, Product $product)
+        public function update(ProductRequest $request, Product $product)
         {
-            $product->update($request->except('tags'));
-
-
-            $tags = json_decode($request->post('tags'));
-            $tag_ids = [];
-
-            $saved_tags = Tag::all();
-
-            foreach ($tags as $item) {
-                $slug = Str::slug($item->value);
-                $tag = $saved_tags->where('slug', $slug)->first();
-                if (!$tag) {
-                    $tag = Tag::create([
-                        'name' => $item->value,
-                        'slug' => $slug,
-                    ]);
-                }
-                $tag_ids[] = $tag->id;
-            }
-
-            $product->tags()->sync($tag_ids);
-
-            return redirect()->route('dashboard.products.index')
-                ->with('success', 'Product updated');
+            return $this->ProductsInterface->update($request, $product);
         }
 
         /**
@@ -136,15 +87,10 @@
          */
         public function destroy(Product $product)
         {
-            //
-            $product->delete();
-
-
-            return Redirect::route('dashboard.products.index')
-                ->with('danger', 'Category deleted!');
+            return $this->ProductsInterface->destroy($product);
         }
 
-        protected function uploadImgae(Request $request)
+        protected function uploadImgae(ProductRequest $request)
         {
             if (!$request->hasFile('image')) {
                 return;
@@ -160,30 +106,18 @@
 
         public function trash()
         {
-            $products = Product::onlyTrashed()->paginate();
-            return view('dashboard.products.trash', compact('products'));
+            return $this->ProductsInterface->trash();
+
         }
 
-        public function restore(Request $request, $id)
+        public function restore($id)
         {
-            $product = Product::onlyTrashed()->findOrFail($id);
-            $product->restore();
-
-            return redirect()->route('dashboard.products.trash')
-                ->with('info', 'Product restored!');
+            return $this->ProductsInterface->restore($id);
         }
 
         public function forceDelete($id)
         {
-            $product = Product::onlyTrashed()->findOrFail($id);
-            $product->forceDelete();
-
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-
-            return redirect()->route('dashboard.products.trash')
-                ->with('danger', 'Product deleted forever!');
+            return $this->ProductsInterface->forceDelete($id);
         }
 
     }

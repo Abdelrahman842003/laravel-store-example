@@ -328,7 +328,7 @@ CodeMirror.defineMode("dylan", function(_config) {
     };
   }
 
-  // Interface
+  // Interfaces
   return {
     startState: function() {
       return {

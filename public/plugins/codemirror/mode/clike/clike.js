@@ -155,7 +155,7 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
       state.typeAtEndOfLine = typeBefore(stream, state, stream.pos)
   }
 
-  // Interface
+  // Interfaces
 
   return {
     startState: function(basecolumn) {

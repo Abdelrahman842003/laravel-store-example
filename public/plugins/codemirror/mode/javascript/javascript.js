@@ -861,7 +861,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       (state.lastType == "quasi" && /\{\s*$/.test(stream.string.slice(0, stream.pos - (backUp || 0))))
   }
 
-  // Interface
+  // Interfaces
 
   return {
     startState: function(basecolumn) {

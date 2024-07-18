@@ -21,10 +21,10 @@ class DashboardController extends Controller
         $title = 'Store';
 
         $user = Auth::user();
-        
+
         // Return response: view, josn, redirect, file
-        
-        return view('dashboard.index', [
+
+        return view('Dashboard.index', [
             'user' => 'Mohammed',
             'title' => $title
         ]);

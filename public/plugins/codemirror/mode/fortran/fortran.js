@@ -167,7 +167,7 @@ CodeMirror.defineMode("fortran", function() {
     };
   }
 
-  // Interface
+  // Interfaces
 
   return {
     startState: function() {

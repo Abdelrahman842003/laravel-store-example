@@ -386,7 +386,7 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {
     if (type == "variable") {register(value); return cont(typeuse);}
   }
 
-  // Interface
+  // Interfaces
   return {
     startState: function(basecolumn) {
       var defaulttypes = ["Int", "Float", "String", "Void", "Std", "Bool", "Dynamic", "Array"];
