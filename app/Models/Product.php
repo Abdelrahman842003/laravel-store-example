@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Scopes\StoreScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
         'name', 'slug', 'description', 'image', 'category_id', 'store_id',
@@ -41,4 +43,17 @@ class Product extends Model
             'id'            // PK related model
         );
     }
+    public function scopeFilter(Builder $builder, $filters)
+    {
+
+        $builder->when($filters['name'] ?? false, function($builder, $value) {
+            $builder->where('products.name', 'LIKE', "%{$value}%");
+        });
+
+        $builder->when($filters['status'] ?? false, function($builder, $value) {
+            $builder->where('products.status', '=', $value);
+        });
+
+    }
+
 }

@@ -26,7 +26,7 @@ class CategoriesController extends Controller
         // SELECT a.*, b.name as parent_name
         // FROM categories as a
         // LEFT JOIN categories as b ON b.id = a.parent_id
-       
+
         $categories = Category::with('parent')
             /*leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
             ->select([
@@ -44,7 +44,7 @@ class CategoriesController extends Controller
             ->filter($request->query())
             ->orderBy('categories.name')
             ->paginate(); // Return Collection object
-        
+
         return view('dashboard.categories.index', compact('categories'));
     }
 
@@ -81,10 +81,10 @@ class CategoriesController extends Controller
         $data = $request->except('image');
         $data['image'] = $this->uploadImgae($request);
 
-        
+
         // Mass assignment
         $category = Category::create( $data );
-        
+
         // PRG
         return Redirect::route('dashboard.categories.index')
             ->with('success', 'Category created!');
@@ -117,8 +117,8 @@ class CategoriesController extends Controller
             return redirect()->route('dashboard.categories.index')
                 ->with('info', 'Record not found!');
         }
-        
-        // SELECT * FROM categories WHERE id <> $id 
+
+        // SELECT * FROM categories WHERE id <> $id
         // AND (parent_id IS NULL OR parent_id <> $id)
         $parents = Category::where('id', '<>', $id)
             ->where(function($query) use ($id) {
@@ -150,7 +150,7 @@ class CategoriesController extends Controller
         if ($new_image) {
             $data['image'] = $new_image;
         }
-        
+
         $category->update( $data );
         //$category->fill($request->all())->save();
 
@@ -175,10 +175,10 @@ class CategoriesController extends Controller
 
         //Category::where('id', '=', $id)->delete();
         //Category::destroy($id);
-        
+
 
         return Redirect::route('dashboard.categories.index')
-            ->with('success', 'Category deleted!');
+            ->with('danger', 'Category deleted!');
     }
 
     protected function uploadImgae(Request $request)
@@ -188,8 +188,8 @@ class CategoriesController extends Controller
         }
 
         $file = $request->file('image'); // UploadedFile Object
-        
-        $path = $file->store('uploads', [
+
+        $path = $file->store('uploads_Categories', [
             'disk' => 'public'
         ]);
         return $path;
@@ -220,6 +220,6 @@ class CategoriesController extends Controller
         }
 
         return redirect()->route('dashboard.categories.trash')
-            ->with('succes', 'Category deleted forever!');
+            ->with('danger', 'Category deleted forever!');
     }
 }

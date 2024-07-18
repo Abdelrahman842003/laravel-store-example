@@ -35,10 +35,10 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id', 'id');
     }
 
-    public function scopeActive(Builder $builder)
-    {
-        $builder->where('status', '=', 'active');
-    }
+//    public function scopeActive(Builder $builder)
+//    {
+//        $builder->where('status', '=', 'active');
+//    }
 
     public function scopeFilter(Builder $builder, $filters)
     {

@@ -11,6 +11,17 @@
             <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>{{ $category->name }}</option>
             @endforeach
         </select>
+
+    </div>
+    <div class="form-group">
+        <label for="">Store</label>
+        <select name="store_id" class="form-control form-select">
+            <option value="">Primary Store</option>
+            @foreach(App\Models\Store::all() as $store)
+                <option value="{{ $store->id }}" @selected(old('store_id', $store->store_id) == $store->id)>{{ $store->name }}</option>
+            @endforeach
+        </select>
+
     </div>
     <div class="form-group">
         <label for="">Description</label>
